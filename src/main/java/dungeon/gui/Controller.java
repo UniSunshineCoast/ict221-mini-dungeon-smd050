@@ -24,15 +24,14 @@ public class Controller {
     private TextField txtf_Health, txtf_Score, txtf_HighScore, txtf_Steps;
 
     @FXML
-    private Button move_Up_Button, move_Down_Button, move_Left_Button, move_Right_Button, highScoresButton;
+    private Button move_Up_Button, move_Down_Button, move_Left_Button, move_Right_Button;
 
     private Player player;
 
 
     GameEngine engine;
 
-
-
+// <editor-fold desc="Map">
     @FXML
     public void initialize() {
         engine = new GameEngine(10);
@@ -156,8 +155,7 @@ public class Controller {
 
         }
     }
-
-
+// </editor-fold>
 
 // <editor-fold desc="Buttons">
 

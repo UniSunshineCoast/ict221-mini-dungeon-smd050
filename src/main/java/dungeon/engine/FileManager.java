@@ -12,7 +12,7 @@ public class FileManager {
     private List<ScoreRecord> scores = new ArrayList<>();
 
     public FileManager() {
-        ensureDirectoryAndFileExist();
+        fileExists();
         renderHighScore();
     }
 
@@ -20,7 +20,7 @@ public class FileManager {
         return new ArrayList<>(scores.subList(0, Math.min(num, scores.size())));
     }
 
-    private void ensureDirectoryAndFileExist() {
+    private void fileExists() {
         File dir = new File(directory_name);
         if (!dir.exists()) {
             boolean createdDir = dir.mkdirs();
@@ -39,7 +39,7 @@ public class FileManager {
                     System.out.println("HighScores file created inside resources.");
                 }
             } catch (IOException e) {
-                System.out.println("Failed to create high score file: " + e.getMessage());
+                System.out.println("Failed to create .gameData.txt: " + e.getMessage());
             }
         }
     }
@@ -47,7 +47,7 @@ public class FileManager {
     private void renderHighScore() {
         File file = new File(directory_name, file_name);
         if (!file.exists()) {
-            System.out.println("HighScores file does not exist...");
+            System.out.println(".gameData.txt does not exist...");
             return;
         }
 
@@ -60,10 +60,22 @@ public class FileManager {
                 scores.add(new ScoreRecord(score, date));
             }
         } catch (Exception e) {
-            System.out.println("Loading Score failed: " + e.getMessage());
+            System.out.println("Loading Score Failed: " + e.getMessage());
         }
     }
 
+    private void displayNewRecord(ScoreRecord record) {
+        int rank = scores.indexOf(record) + 1;
+        System.out.println("\nYour Final Score: " + record.getScore() + " (Rank #" + rank + ")");
+    }
+
+    public void displayTopScores() {
+        System.out.println("\nRanking:");
+        for (int i = 0; i < Math.min(5, scores.size()); i++) {
+            ScoreRecord entry = scores.get(i);
+            System.out.printf("%d. %s%n", i + 1, entry);
+        }
+    }
     public void addNewScore(int score) {
         ScoreRecord newScore = new ScoreRecord(score, LocalDate.now());
         scores.add(newScore);
@@ -80,23 +92,9 @@ public class FileManager {
                 writer.write(score.getScore() + "," + score.getDate() + "\n");
             }
         } catch (Exception e) {
-            System.out.println("Error Saving new score Record: " + e.getMessage());
+            System.out.println("Error Saving Score: " + e.getMessage());
         }
     }
-
-    private void displayNewRecord(ScoreRecord record) {
-        int rank = scores.indexOf(record) + 1;
-        System.out.println("\nYour Final Score: " + record.getScore() + " (Rank #" + rank + ")");
-    }
-
-    public void displayTopScores() {
-        System.out.println("\nRanking:");
-        for (int i = 0; i < Math.min(5, scores.size()); i++) {
-            ScoreRecord entry = scores.get(i);
-            System.out.printf("%d. %s%n", i + 1, entry);
-        }
-    }
-
 
 
 

@@ -24,20 +24,20 @@ public class Player implements  Serializable {
     /**
      *  Player Movements
      */
-    //Set Player with initial position (X,Y) coordinates
+    ///Set Player with initial position (X,Y) coordinates
     public Player(int startX, int startY) {
         this.x = startX;
         this.y = startY;
     }
 
-    //Move Player upon request with new coordinates
+    ///Move Player upon request with new coordinates
     public void moveTo(int newX, int newY) {
         this.x = newX;
         this.y = newY;
 
     }
 
-    // Constructors for player position
+    /// Constructors for player position
     public int getX() {
         return x;
     }

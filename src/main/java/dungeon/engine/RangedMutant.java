@@ -23,12 +23,12 @@ public class RangedMutant implements MapItem, Serializable {
     }
 
     public String tryAttack(Player player, int mutantX, int mutantY, int playerX, int playerY) {
-        // Check if player is 1 or 2 tiles away in a cardinal direction
+
         if ((playerX == mutantX && (Math.abs(playerY - mutantY) == 1 || Math.abs(playerY - mutantY) == 2)) ||
                 (playerY == mutantY && (Math.abs(playerX - mutantX) == 1 || Math.abs(playerX - mutantX) == 2))) {
 
             Random rand = new Random();
-            if (rand.nextBoolean()) {  // 50% chance to hit
+            if (rand.nextBoolean()) {
                 player.updateHp(-2);
                 return "Ranged Mutant from (" + mutantX + "," + mutantY + ") Hit You! -2 HP.";
             } else {

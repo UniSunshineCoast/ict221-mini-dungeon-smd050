@@ -135,15 +135,15 @@ public class GameEngine implements Serializable {
             }
         }
         populateMap(difficulty);
-        player.moveTo(0, map.length - 1 ); // reset player position if needed
+        player.moveTo(0, map.length - 1 );
         return map;
     }
 
-    private void placeEntity(MapItem entity, int x, int y) {
+    private void placeItem(MapItem entity, int x, int y) {
         map[y][x].setEntity(entity);
     }
 
-    private void placeRandomEntities(MapItem entity, int count) {
+    private void placeRandomItem(MapItem entity, int count) {
         Random rand = new Random();
         int size = map.length;
 
@@ -160,14 +160,14 @@ public class GameEngine implements Serializable {
 
     private void populateMap(int difficulty) {
         boolean isFinalLevel = currentLevel == finalLevel;
-        placeEntity(new Entry(), 0, map.length - 1); // Bottom-left corner
+        placeItem(new Entry(), 0, map.length - 1);
 
-        placeRandomEntities(new Ladder(isFinalLevel), 1);
-        placeRandomEntities(new Gold(), 5);
-        placeRandomEntities(new Trap(), 5);
-        placeRandomEntities(new MeleeMutant(), 3);
-        placeRandomEntities(new RangedMutant(), difficulty); // based on difficulty
-        placeRandomEntities(new HealthPotion(), 2);
+        placeRandomItem(new Ladder(isFinalLevel), 1);
+        placeRandomItem(new Gold(), 5);
+        placeRandomItem(new Trap(), 5);
+        placeRandomItem(new MeleeMutant(), 3);
+        placeRandomItem(new RangedMutant(), difficulty);
+        placeRandomItem(new HealthPotion(), 2);
     }
 
 
@@ -188,23 +188,6 @@ public class GameEngine implements Serializable {
         return sb.toString();
     }
 
-    public String getStatusBar() {
-        int health = player.getHealth();
-        int maxHealth = player.getMaxHealth();
-        int score = player.getScore();
-        StringBuilder status = new StringBuilder("Health: [");
-
-        for (int i = 0; i < maxHealth; i++) {
-            if (i < health) {
-                status.append("*");  // filled heart for current health
-            } else {
-                status.append(" ");  // space for missing health
-            }
-        }
-
-        status.append("] " + health + "/" + maxHealth + " | Score: ").append(score);
-        return status.toString();
-    }
 
 
 
@@ -217,11 +200,30 @@ public class GameEngine implements Serializable {
         return player;
     }
 
+    public String getPlayerDetails() {
+        int health = player.getHealth();
+        int maxHealth = player.getMaxHealth();
+        int score = player.getScore();
+        StringBuilder status = new StringBuilder("Health: [");
+
+        for (int i = 0; i < maxHealth; i++) {
+            if (i < health) {
+                status.append("*");
+            } else {
+                status.append(" ");
+            }
+        }
+
+        status.append("] " + health + "/" + maxHealth + " | Score: ").append(score);
+        return status.toString();
+    }
+
+
     public String movePlayer(String direction) {
 
         int dx = 0, dy = 0;
 
-        //switch case for movement, WASD settings for up, down, left, right.
+        ///switch case for movement, WASD settings for up, down, left, right.
         switch (direction.toLowerCase()) {
             case "w": dy = -1; break;
             case "s": dy = 1; break;
@@ -237,21 +239,18 @@ public class GameEngine implements Serializable {
         int newY = player.getY() + dy;
 
         if (newX < 0 || newX >= map.length || newY < 0 || newY >= map.length) {
-            return "You tried to move outside the map!";
+            return "You tried to go out of bounds";
         }
-
         Cell target = map[newY][newX];
-
         if (target.isBlocking()) {
-            return "You tried to move but it is a wall.";
+            return "You Stared at a wall menacingly";
         }
-
         player.moveTo(newX, newY);
 
 
         String message = target.interact(player);
 
-        //Don't Break Entrance or Traps
+        ///Don't Break Entrance or Traps
         if (!(target.getEntity() instanceof Entry || target.getEntity() instanceof Trap)) {
             target.setEntity(null);
         }
@@ -275,7 +274,7 @@ public class GameEngine implements Serializable {
          * Used for Testing Steps
          *      player.addStep(); player.addStep();player.addStep();player.addStep();player.addStep();player.addStep();player.addStep();player.addStep();player.addStep();player.addStep();
          *      System.out.println(player.getSteps());
-        **/
+         **/
 
         if (player.moveToLevel2()) {
 
@@ -323,7 +322,7 @@ public class GameEngine implements Serializable {
         while (true) {
             System.out.println("\nCurrent Map:");
             System.out.println(engine.renderMap());
-            System.out.println(engine.getStatusBar());
+            System.out.println(engine.getPlayerDetails());
 
             System.out.print("W/A/S/D to move, or type 'Quit', 'Display', 'SaveGame', or 'LoadGame': ");
             String movement = scanner.nextLine().trim();

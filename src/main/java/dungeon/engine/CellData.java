@@ -19,9 +19,7 @@ public class CellData implements Serializable {
         this.entity = entity;
     }
 
-    public boolean isBlocking() {
-        return entity instanceof Wall;
-    }
+
 
     public String interact(Player player) {
         if (entity != null) {
